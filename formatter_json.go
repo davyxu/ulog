@@ -10,18 +10,24 @@ type JSONFormatter struct {
 	PrettyPrint     bool
 }
 
-func (self *JSONFormatter) Format(entry *Entry) ([]byte, error) {
-
-	b := entry.Buffer
-
+func (self *JSONFormatter) GetTime(entry *Entry) string {
 	var timeFormat string
 	if self.TimestampFormat != "" {
 		timeFormat = self.TimestampFormat
 	} else {
 		timeFormat = JsonTimeFormat
 	}
+	return entry.Time.Format(timeFormat)
+}
+func (self *JSONFormatter) Format(entry *Entry) ([]byte, error) {
 
-	entry.Data["@time"] = entry.Time.Format(timeFormat)
+	b := entry.Buffer
+
+	if entry.HasCaller() {
+		entry.Data["@file"] = fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)
+	}
+
+	entry.Data["@time"] = self.GetTime(entry)
 	entry.Data["@level"] = entry.Level.String()
 	entry.Data["@msg"] = entry.Message
 

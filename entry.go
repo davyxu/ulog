@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"runtime"
 	"sync"
 	"time"
 )
@@ -27,6 +28,8 @@ type Entry struct {
 	Message string // 日志内容
 
 	Buffer *bytes.Buffer // 最终生成的日志完整内容
+
+	Caller *runtime.Frame // 日志调用者
 
 	needFree bool
 }
@@ -74,6 +77,12 @@ func (self *Entry) Logln(level Level, args ...interface{}) {
 	self.Logger.freeEntry(self)
 }
 
+func (self Entry) HasCaller() (has bool) {
+	return self.Logger != nil &&
+		self.Logger.ReportCaller &&
+		self.Caller != nil
+}
+
 // 这里每次初始化
 func (self Entry) log(level Level, msg string) {
 	var buffer *bytes.Buffer
@@ -85,6 +94,10 @@ func (self Entry) log(level Level, msg string) {
 
 	self.Level = level
 	self.Message = msg
+
+	if self.Logger.ReportCaller {
+		self.Caller = getCaller()
+	}
 
 	buffer = bufferPool.Get().(*bytes.Buffer)
 	buffer.Reset()

@@ -20,6 +20,7 @@ func TestTextFormatter(t *testing.T) {
 	Warnf("warning %d", 123)
 	Errorf("error %d", 567)
 
+	Global().SetReportCaller(true)
 	// 全局颜色输出
 	WithColorName("purple").Infoln("WithColorName ", Purple.String())
 	WithColor(DarkGreen).Errorf("WithColor %s", DarkGreen.String())
@@ -59,7 +60,7 @@ func TestTextFormatter(t *testing.T) {
 func TestJsonFormatter(t *testing.T) {
 	Global().SetFormatter(&JSONFormatter{})
 	Global().SetLevel(DebugLevel)
-
+	Global().SetReportCaller(true)
 	// 单行kv
 	WithField("key", "value").Infof("noraml json")
 

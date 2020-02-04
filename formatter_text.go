@@ -12,8 +12,8 @@ import (
 type TextFormatter struct {
 	EnableColor     bool // 命令行着色
 	TimestampFormat string
-
-	rule *ColorRuleSet
+	CallerFileLevel int // 调用栈文件名显示长度, -1: 完整, 0: 文件名, 1: 文件+1级文件夹
+	rule            *ColorRuleSet
 }
 
 // 从颜色规则文本读取规则
@@ -79,7 +79,11 @@ func (self *TextFormatter) GetTime(entry *Entry) string {
 }
 
 // 取得调用者
-func (self *TextFormatter) GetCaller() string {
+func (self *TextFormatter) GetCaller(entry *Entry) string {
+	if entry.HasCaller() {
+		return fmt.Sprintf(" %s:%d", trimPath(entry.Caller.File, self.CallerFileLevel), entry.Caller.Line)
+	}
+
 	return ""
 }
 
@@ -87,11 +91,11 @@ func (self *TextFormatter) Format(entry *Entry) ([]byte, error) {
 
 	b := entry.Buffer
 
-	fmt.Fprintf(b, "%s%s[%s]%s %s%s",
-		self.GetPrefix(entry),
+	fmt.Fprintf(b, "%s%s[%s%s] %s%s",
+		self.GetPrefix(entry).Prefix,
 		entry.Level.String(),
 		self.GetTime(entry),
-		self.GetCaller(),
+		self.GetCaller(entry),
 		entry.Message,
 		self.GetSuffix(),
 	)

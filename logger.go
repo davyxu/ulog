@@ -13,6 +13,8 @@ type Logger struct {
 
 	Formatter Formatter // 格式化器
 
+	ReportCaller bool
+
 	level Level // 日志输出级别
 
 	entryPool sync.Pool // 分配Entry的池
@@ -32,6 +34,13 @@ func (self *Logger) SetOutput(output io.Writer) {
 	self.guard.Lock()
 	defer self.guard.Unlock()
 	self.Output = output
+}
+
+// 设置是否显示调用者
+func (self *Logger) SetReportCaller(reportCaller bool) {
+	self.guard.Lock()
+	defer self.guard.Unlock()
+	self.ReportCaller = reportCaller
 }
 
 // 设置当前日志输出的级别

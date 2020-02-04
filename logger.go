@@ -136,15 +136,15 @@ func (self *Logger) allocEntry() *Entry {
 		entry = NewEntry(self)
 	}
 
+	entry.Reset()
+
 	entry.needFree = true
 	return entry
 }
 
 func (self *Logger) freeEntry(entry *Entry) {
 	if entry.needFree {
-		if len(entry.Data) > 0 {
-			entry.Data = map[string]interface{}{}
-		}
+
 		self.entryPool.Put(entry)
 	}
 }

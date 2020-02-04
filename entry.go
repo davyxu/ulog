@@ -34,6 +34,17 @@ type Entry struct {
 	needFree bool
 }
 
+func (self *Entry) Reset() {
+	if len(self.Data) > 0 {
+		self.Data = map[string]interface{}{}
+	}
+	self.Time = time.Time{}
+	self.Level = DebugLevel
+	self.ColorDef = nil
+	self.Message = ""
+	self.Caller = nil
+}
+
 func (self *Entry) GetColorDefine() *ColorDefine {
 	if self.ColorDef == nil {
 		return WhiteColorDef

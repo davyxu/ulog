@@ -1,6 +1,11 @@
 package ulog
 
-import "testing"
+import (
+	"strconv"
+	"strings"
+	"testing"
+	"time"
+)
 
 func TestTextFormatter(t *testing.T) {
 
@@ -69,6 +74,42 @@ func TestJsonFormatter(t *testing.T) {
 	}).Errorf("error json with pretty print")
 }
 
+// 定义纯文本输出
+type testFormatter struct {
+	TextFormatter
+}
+
+func (self *testFormatter) Format(entry *Entry) ([]byte, error) {
+	b := entry.Buffer
+
+	b.WriteString(entry.Message)
+
+	b.WriteByte('\n')
+	return b.Bytes(), nil
+}
+
+func TestRollingFile(t *testing.T) {
+	const (
+		fileName        = "tt.log"
+		maxFileSize     = 1000
+		eachTimeWrite   = 100
+		totalTimesWrite = 100
+		numberFile      = eachTimeWrite * totalTimesWrite / maxFileSize
+	)
+
+	Global().SetFormatter(&testFormatter{})
+
+	asyncWriter := NewAsyncOutput(NewRollingOutput(fileName, maxFileSize))
+	Global().SetOutput(asyncWriter)
+
+	for i := 0; i < totalTimesWrite; i++ {
+		Infoln(strings.Repeat(strconv.Itoa(i), eachTimeWrite))
+	}
+
+	// 异步写入时, 在程序结束前, 需要保证完全写入
+	asyncWriter.Flush(time.Second)
+}
+
 // 没有Entry分配
 func BenchmarkNoEntryAlloc(b *testing.B) {
 
@@ -84,5 +125,4 @@ func BenchmarkEntryEach(b *testing.B) {
 	for i := 0; i < 10; i++ {
 		NewEntry(Global()).Infoln(i)
 	}
-
 }

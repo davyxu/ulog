@@ -16,6 +16,7 @@ type TextFormatter struct {
 	rule *ColorRuleSet
 }
 
+// 从颜色规则文本读取规则
 func (self *TextFormatter) ParseColorRule(ruleText string) error {
 	self.rule = NewColorRuleSet()
 	err := self.rule.Parse(ruleText)
@@ -35,9 +36,8 @@ func (self *TextFormatter) matchText(text string) *ColorDefine {
 	return self.rule.MatchText(text)
 }
 
-func (self *TextFormatter) Format(entry *Entry) ([]byte, error) {
-
-	b := entry.Buffer
+// 取得颜色前缀
+func (self *TextFormatter) GetPrefix(entry *Entry) *ColorDefine {
 
 	var cdef *ColorDefine
 
@@ -56,23 +56,48 @@ func (self *TextFormatter) Format(entry *Entry) ([]byte, error) {
 		cdef = WhiteColorDef
 	}
 
+	return cdef
+}
+
+// 取得颜色后缀
+func (self *TextFormatter) GetSuffix() string {
+	if self.EnableColor {
+		return consoleColorSuffix
+	}
+	return ""
+}
+
+// 取得时间
+func (self *TextFormatter) GetTime(entry *Entry) string {
 	var timeFormat string
 	if self.TimestampFormat != "" {
 		timeFormat = self.TimestampFormat
 	} else {
 		timeFormat = TextTimeFormat
 	}
+	return entry.Time.Format(timeFormat)
+}
 
-	var caller string
+// 取得调用者
+func (self *TextFormatter) GetCaller() string {
+	return ""
+}
 
-	fmt.Fprintf(b, "%s%s[%s]%s %s", cdef.Prefix, levelBytes[entry.Level], entry.Time.Format(timeFormat), caller, entry.Message)
+func (self *TextFormatter) Format(entry *Entry) ([]byte, error) {
+
+	b := entry.Buffer
+
+	fmt.Fprintf(b, "%s%s[%s]%s %s%s",
+		self.GetPrefix(entry),
+		entry.Level.String(),
+		self.GetTime(entry),
+		self.GetCaller(),
+		entry.Message,
+		self.GetSuffix(),
+	)
 
 	// TODO
 	// 根据配置添加kv
-
-	if self.EnableColor {
-		b.Write(consoleColorSuffix)
-	}
 
 	b.WriteByte('\n')
 	return b.Bytes(), nil

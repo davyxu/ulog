@@ -10,23 +10,12 @@ const (
 )
 
 func (self Level) String() string {
-	switch self {
-	case DebugLevel:
-		return "DEBU"
-	case InfoLevel:
-		return "INFO"
-	case WarnLevel:
-		return "WARN"
-	case ErrorLevel:
-		return "ERRO"
-	}
-
-	return "UNKW"
+	return levelString[self]
 }
 
-var levelBytes = [...][]byte{
-	[]byte("DEBU"),
-	[]byte("INFO"),
-	[]byte("WARN"),
-	[]byte("ERRO"),
+var levelString = [...]string{
+	"DEBU",
+	"INFO",
+	"WARN",
+	"ERRO",
 }

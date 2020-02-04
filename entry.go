@@ -102,7 +102,7 @@ func (self *Entry) write() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to obtain reader, %v\n", err)
 	} else {
-		_, err = self.Logger.Out.Write(serialized)
+		_, err = self.Logger.Output.Write(serialized)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to write to log, %v\n", err)
 		}
@@ -144,8 +144,7 @@ func (self *Entry) Errorln(args ...interface{}) {
 func NewEntry(logger *Logger) *Entry {
 	return &Entry{
 		Logger: logger,
-		// Default is three fields, plus one optional.  Give a little extra room.
-		Data: make(Fields, 6),
+		Data:   make(Fields, 6),
 	}
 }
 

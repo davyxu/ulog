@@ -9,13 +9,13 @@ import (
 )
 
 type Logger struct {
-	Out io.Writer
+	Output io.Writer // 日志输出
 
-	Formatter Formatter
+	Formatter Formatter // 格式化器
 
-	currLevel Level
+	level Level // 日志输出级别
 
-	entryPool sync.Pool
+	entryPool sync.Pool // 分配Entry的池
 
 	guard sync.RWMutex
 }
@@ -31,17 +31,17 @@ func (self *Logger) SetFormatter(formatter Formatter) {
 func (self *Logger) SetOutput(output io.Writer) {
 	self.guard.Lock()
 	defer self.guard.Unlock()
-	self.Out = output
+	self.Output = output
 }
 
 // 设置当前日志输出的级别
 func (logger *Logger) SetLevel(level Level) {
-	atomic.StoreUint32((*uint32)(&logger.currLevel), uint32(level))
+	atomic.StoreUint32((*uint32)(&logger.level), uint32(level))
 }
 
 // 获取当前日志输出的级别
 func (self *Logger) GetLevel() Level {
-	return Level(atomic.LoadUint32((*uint32)(&self.currLevel)))
+	return Level(atomic.LoadUint32((*uint32)(&self.level)))
 }
 
 func (self *Logger) IsLevelEnabled(level Level) bool {
@@ -142,8 +142,8 @@ func (self *Logger) freeEntry(entry *Entry) {
 
 func New() *Logger {
 	return &Logger{
-		Out:       os.Stdout,
+		Output:    os.Stdout,
 		Formatter: &TextFormatter{},
-		currLevel: InfoLevel,
+		level:     InfoLevel,
 	}
 }

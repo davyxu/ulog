@@ -26,24 +26,24 @@ func (self Color) String() string {
 type ColorDefine struct {
 	Name   string
 	Color  Color
-	Prefix []byte
+	Prefix string
 }
 
 // 每种颜色定义的名称, 命令行加色
 var colorDefines = []*ColorDefine{
-	{Name: "white", Color: White, Prefix: []byte("")},
-	{Name: "black", Color: Black, Prefix: []byte("\x1b[030m")},
-	{Name: "red", Color: Red, Prefix: []byte("\x1b[031m")},
-	{Name: "green", Color: Green, Prefix: []byte("\x1b[032m")},
-	{Name: "yellow", Color: Yellow, Prefix: []byte("\x1b[033m")},
-	{Name: "blue", Color: Blue, Prefix: []byte("\x1b[034m")},
-	{Name: "purple", Color: Purple, Prefix: []byte("\x1b[035m")},
-	{Name: "darkgreen", Color: DarkGreen, Prefix: []byte("\x1b[036m")},
-	{Name: "gray", Color: Gray, Prefix: []byte("\x1b[037m")},
+	{Name: "white", Color: White, Prefix: ""},
+	{Name: "black", Color: Black, Prefix: "\x1b[030m"},
+	{Name: "red", Color: Red, Prefix: "\x1b[031m"},
+	{Name: "green", Color: Green, Prefix: "\x1b[032m"},
+	{Name: "yellow", Color: Yellow, Prefix: "\x1b[033m"},
+	{Name: "blue", Color: Blue, Prefix: "\x1b[034m"},
+	{Name: "purple", Color: Purple, Prefix: "\x1b[035m"},
+	{Name: "darkgreen", Color: DarkGreen, Prefix: "\x1b[036m"},
+	{Name: "gray", Color: Gray, Prefix: "\x1b[037m"},
 }
 
 var (
-	consoleColorSuffix = []byte("\x1b[0m")
+	consoleColorSuffix = "\x1b[0m"
 	WhiteColorDef      *ColorDefine
 	YellowColorDef     *ColorDefine
 	RedColorDef        *ColorDefine

@@ -1,10 +1,7 @@
 package ulog
 
 import (
-	"strconv"
-	"strings"
 	"testing"
-	"time"
 )
 
 func TestTextFormatter(t *testing.T) {
@@ -89,27 +86,27 @@ func (self *testFormatter) Format(entry *Entry) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func TestRollingFile(t *testing.T) {
-	const (
-		fileName        = "tt.log"
-		maxFileSize     = 1000
-		eachTimeWrite   = 100
-		totalTimesWrite = 100
-		numberFile      = eachTimeWrite * totalTimesWrite / maxFileSize
-	)
-
-	Global().SetFormatter(&testFormatter{})
-
-	asyncWriter := NewAsyncOutput(NewRollingOutput(fileName, maxFileSize))
-	Global().SetOutput(asyncWriter)
-
-	for i := 0; i < totalTimesWrite; i++ {
-		Infoln(strings.Repeat(strconv.Itoa(i), eachTimeWrite))
-	}
-
-	// 异步写入时, 在程序结束前, 需要保证完全写入
-	asyncWriter.Flush(time.Second)
-}
+//func TestRollingFile(t *testing.T) {
+//	const (
+//		fileName        = "tt.log"
+//		maxFileSize     = 1000
+//		eachTimeWrite   = 100
+//		totalTimesWrite = 100
+//		numberFile      = eachTimeWrite * totalTimesWrite / maxFileSize
+//	)
+//
+//	Global().SetFormatter(&testFormatter{})
+//
+//	asyncWriter := NewAsyncOutput(NewRollingOutput(fileName, maxFileSize))
+//	Global().SetOutput(asyncWriter)
+//
+//	for i := 0; i < totalTimesWrite; i++ {
+//		Infoln(strings.Repeat(strconv.Itoa(i), eachTimeWrite))
+//	}
+//
+//	// 异步写入时, 在程序结束前, 需要保证完全写入
+//	asyncWriter.Flush(time.Second)
+//}
 
 // 没有Entry分配
 func BenchmarkNoEntryAlloc(b *testing.B) {

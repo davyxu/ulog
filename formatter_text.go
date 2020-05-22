@@ -91,17 +91,20 @@ func (self *TextFormatter) Format(entry *Entry) ([]byte, error) {
 
 	b := entry.Buffer
 
-	fmt.Fprintf(b, "%s%s[%s%s] %s%s",
-		self.GetPrefix(entry).Prefix,
-		entry.Level.String(),
-		self.GetTime(entry),
-		self.GetCaller(entry),
-		entry.Message,
-		self.GetSuffix(),
-	)
+	b.WriteString(self.GetPrefix(entry).Prefix)
+	b.WriteString(entry.Level.String())
+	b.WriteString("[")
+	b.WriteString(self.GetTime(entry))
+	b.WriteString("] ")
+	b.WriteString(self.GetCaller(entry))
+	b.WriteString(" ")
+	b.WriteString(entry.Message)
 
-	// TODO
-	// 根据配置添加kv
+	for k, v := range entry.Data {
+		fmt.Fprintf(b, " %s=%v", k, v)
+	}
+
+	b.WriteString(self.GetSuffix())
 
 	b.WriteByte('\n')
 	return b.Bytes(), nil

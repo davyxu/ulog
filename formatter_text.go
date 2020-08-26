@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// 默认文本输出格式
 // 颜色优先级从高到低:
 // 1. 开启颜色(EnableColor)
 // 2. 指定颜色(WithColorName, WithColor)

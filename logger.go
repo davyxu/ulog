@@ -153,6 +153,6 @@ func New() *Logger {
 	return &Logger{
 		Output:    os.Stdout,
 		Formatter: &TextFormatter{},
-		level:     InfoLevel,
+		level:     DebugLevel,
 	}
 }

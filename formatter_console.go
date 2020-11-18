@@ -29,7 +29,7 @@ func (self *ConsoleFormatter) GetPrefix(entry *Entry) *ColorDefine {
 // 取得颜色后缀
 func (self *ConsoleFormatter) GetSuffix() string {
 	if self.EnableColor {
-		return consoleColorSuffix
+		return ConsoleColorSuffix
 	}
 	return ""
 }

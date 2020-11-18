@@ -34,6 +34,16 @@ type Entry struct {
 	needFree bool
 }
 
+func (self *Entry) DataAsString(key string) string {
+	v, _ := self.Data[key].(string)
+	return v
+}
+
+func (self *Entry) DataAsInt(key string) int {
+	v, _ := self.Data[key].(int)
+	return v
+}
+
 func (self *Entry) Reset() {
 	if len(self.Data) > 0 {
 		self.Data = map[string]interface{}{}

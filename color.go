@@ -43,7 +43,7 @@ var colorDefines = []*ColorDefine{
 }
 
 var (
-	consoleColorSuffix = "\x1b[0m"
+	ConsoleColorSuffix = "\x1b[0m"
 	WhiteColorDef      *ColorDefine
 	YellowColorDef     *ColorDefine
 	RedColorDef        *ColorDefine

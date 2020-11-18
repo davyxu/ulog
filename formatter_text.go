@@ -63,7 +63,7 @@ func (self *TextFormatter) GetPrefix(entry *Entry) *ColorDefine {
 // 取得颜色后缀
 func (self *TextFormatter) GetSuffix() string {
 	if self.EnableColor {
-		return consoleColorSuffix
+		return ConsoleColorSuffix
 	}
 	return ""
 }

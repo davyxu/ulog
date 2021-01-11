@@ -44,6 +44,16 @@ func (self *Entry) DataAsInt(key string) int {
 	return v
 }
 
+func (self *Entry) DataAsInt64(key string) int64 {
+	v, _ := self.Data[key].(int64)
+	return v
+}
+
+func (self *Entry) DataAsInt32(key string) int32 {
+	v, _ := self.Data[key].(int32)
+	return v
+}
+
 func (self *Entry) Reset() {
 	if len(self.Data) > 0 {
 		self.Data = map[string]interface{}{}

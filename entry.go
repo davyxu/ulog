@@ -84,17 +84,25 @@ func (self *Entry) WithColor(color Color) *Entry {
 }
 
 func (self *Entry) WithField(key string, value interface{}) *Entry {
-	self.Data[key] = value
-	return self
+	return self.WithFields(Fields{key: value})
 }
 
 func (self *Entry) WithFields(fields Fields) *Entry {
 
-	for k, v := range fields {
-		self.Data[k] = v
+	data := make(Fields, len(self.Data)+len(fields))
+	for k, v := range self.Data {
+		data[k] = v
 	}
 
-	return self
+	for k, v := range fields {
+		data[k] = v
+	}
+
+	return &Entry{
+		Logger: self.Logger,
+		Data:   data,
+		Time:   self.Time,
+	}
 }
 
 func (self *Entry) Log(level Level, msg string) {

@@ -1,6 +1,7 @@
 package ulog
 
 import (
+	"io/ioutil"
 	"testing"
 )
 
@@ -123,4 +124,19 @@ func BenchmarkEntryEach(b *testing.B) {
 	for i := 0; i < 10; i++ {
 		NewEntry(Global()).Infoln(i)
 	}
+}
+
+func BenchmarkParallel(b *testing.B) {
+	i := 0
+
+	logger := Global()
+	logger.Output = ioutil.Discard
+
+	b.SetParallelism(100)
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			logger.WithField("a", "b").WithField("s1", "s2").Infoln(i)
+			i++
+		}
+	})
 }

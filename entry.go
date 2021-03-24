@@ -34,6 +34,20 @@ type Entry struct {
 	needFree bool
 }
 
+func (self *Entry) DataToString(key string) string {
+	raw, ok := self.Data[key]
+	if !ok {
+		return ""
+	}
+
+	switch v := raw.(type) {
+	case string:
+		return v
+	default:
+		return fmt.Sprintf("%v", raw)
+	}
+}
+
 func (self *Entry) DataAsString(key string) string {
 	v, _ := self.Data[key].(string)
 	return v
@@ -153,7 +167,7 @@ func (self *Entry) write() {
 	serialized, err := self.Logger.Formatter.Format(self)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to obtain reader, %v\n", err)
-	} else {
+	} else if serialized != nil {
 		_, err = self.Logger.Output.Write(serialized)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to write to log, %v\n", err)

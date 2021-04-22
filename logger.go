@@ -60,40 +60,40 @@ func (self *Logger) IsLevelEnabled(level Level) bool {
 // 指定当前行的日志的颜色, 覆盖按级别以及从日志文本应有的颜色
 func (self *Logger) WithColorName(colorName string) *Entry {
 
-	entry := self.allocEntry()
+	entry := self.Entry()
 	return entry.WithColorName(colorName)
 }
 
 // 指定当前行的日志的颜色, 覆盖按级别以及从日志文本应有的颜色
 func (self *Logger) WithColor(color Color) *Entry {
 
-	entry := self.allocEntry()
+	entry := self.Entry()
 	return entry.WithColor(color)
 }
 
 // 设置当前行日志的附加字段
 func (self *Logger) WithFields(fields Fields) *Entry {
 
-	entry := self.allocEntry()
+	entry := self.Entry()
 	return entry.WithFields(fields)
 }
 
 // 设置当前行日志的附加字段
 func (self *Logger) WithField(key string, value interface{}) *Entry {
-	entry := self.allocEntry()
+	entry := self.Entry()
 	return entry.WithField(key, value)
 }
 
 func (self *Logger) Logf(level Level, format string, args ...interface{}) {
 	if self.IsLevelEnabled(level) {
-		entry := self.allocEntry()
+		entry := self.Entry()
 		entry.Log(level, fmt.Sprintf(format, args...))
 	}
 }
 
 func (self *Logger) Logln(level Level, args ...interface{}) {
 	if self.IsLevelEnabled(level) {
-		entry := self.allocEntry()
+		entry := self.Entry()
 		entry.Logln(level, args...)
 	}
 }
@@ -130,7 +130,7 @@ func (self *Logger) Errorln(args ...interface{}) {
 	self.Logln(ErrorLevel, args...)
 }
 
-func (self *Logger) allocEntry() *Entry {
+func (self *Logger) Entry() *Entry {
 	entry, ok := self.entryPool.Get().(*Entry)
 	if !ok {
 		entry = NewEntry(self)

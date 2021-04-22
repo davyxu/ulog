@@ -48,6 +48,15 @@ func WithColor(color Color) *Entry {
 	return glog.WithColor(color)
 }
 
+// 如果condition是true, 使用颜色关联Entry, 否则没有颜色
+func WithColorByCondition(color Color, condition bool) *Entry {
+
+	if condition {
+		return glog.WithColor(color)
+	}
+	return glog.Entry()
+}
+
 // 设置当前行日志的附加字段
 func WithField(key string, value interface{}) *Entry {
 	return glog.WithField(key, value)

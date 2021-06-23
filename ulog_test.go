@@ -111,9 +111,11 @@ func (self *testFormatter) Format(entry *Entry) ([]byte, error) {
 
 // 没有Entry分配
 func BenchmarkNoEntryAlloc(b *testing.B) {
-
+	b.ReportAllocs()
+	l := New()
+	l.Output = ioutil.Discard
 	for i := 0; i < 10; i++ {
-		Infoln(i)
+		l.Infoln(i)
 	}
 
 }
